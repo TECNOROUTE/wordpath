@@ -1,4 +1,4 @@
-import 'package:sqflite/sqflite.dart'; 
+import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import '../models/user.dart';
 import '../models/question.dart';
@@ -6,7 +6,9 @@ import '../models/user_progress.dart';
 
 class DatabaseHelper {
   static final DatabaseHelper _instance = DatabaseHelper._internal();
+
   factory DatabaseHelper() => _instance;
+
   static Database? _database;
 
   DatabaseHelper._internal();
@@ -26,7 +28,7 @@ class DatabaseHelper {
     );
   }
 
-  Future _onCreate(Database db, int version) async {
+  Future<void> _onCreate(Database db, int version) async {
     await db.execute('''
       CREATE TABLE Users (
         user_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -85,7 +87,8 @@ class DatabaseHelper {
 
   Future<List<Question>> getQuestionsByLevel(int level) async {
     Database db = await database;
-    List<Map<String, dynamic>> maps = await db.query('Questions', where: 'level = ?', whereArgs: [level]);
+    List<Map<String, dynamic>> maps =
+        await db.query('Questions', where: 'level = ?', whereArgs: [level]);
     return List.generate(maps.length, (i) {
       return Question.fromMap(maps[i]);
     });
@@ -99,7 +102,8 @@ class DatabaseHelper {
 
   Future<List<UserProgress>> getUserProgress(int userId) async {
     Database db = await database;
-    List<Map<String, dynamic>> maps = await db.query('UserProgress', where: 'user_id = ?', whereArgs: [userId]);
+    List<Map<String, dynamic>> maps = await db
+        .query('UserProgress', where: 'user_id = ?', whereArgs: [userId]);
     return List.generate(maps.length, (i) {
       return UserProgress.fromMap(maps[i]);
     });
