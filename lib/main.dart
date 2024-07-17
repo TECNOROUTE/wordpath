@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:wordpath/database/database-helper.dart';
+import 'package:wordpath/screens/question_screen.dart';
 import 'models/question.dart';
+import 'screens/home_screen.dart';
+import 'screens/continue_game_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,36 +23,16 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: HomeScreen(),
-    );
-  }
-}
-
-class HomeScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Word Path')),
-      body: FutureBuilder<List<Question>>(
-        future: DatabaseHelper().getQuestionsByLevel(1),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return Center(child: CircularProgressIndicator());
-          }
-          return ListView.builder(
-            itemCount: snapshot.data!.length,
-            itemBuilder: (context, index) {
-              return ListTile(
-                title: Text(snapshot.data![index].word),
-                subtitle: Text(snapshot.data![index].correctOption),
-              );
-            },
-          );
-        },
-      ),
+      home: const HomeScreen(),
+      routes: {
+        '/new_game': (context) => QuestionScreen(),
+        '/continue_game': (context) => const ContinueGameScreen(),
+      },
     );
   }
 }
